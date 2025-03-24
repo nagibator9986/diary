@@ -1,9 +1,7 @@
-venv/
 __pycache__/
 *.pyc
-*.pyd
 *.pyo
-*.db
+*.pyd
+venv/
 *.sqlite
-*.csv
-*.xlsx
+*.db
