@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Галерея воспоминаний{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-images"></i> Галерея воспоминаний</h2>
+        <a href="{{ url_for('add_memory') }}" class="btn btn-secondary">
+            <i class="bi bi-plus-circle"></i> Добавить воспоминание
+        </a>
+    </div>
+
+    {% if memories %}
+    <div class="row">
+        {% for memory in memories %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ url_for('uploaded_file', filename=memory.file_path) }}" 
+                     class="card-img-top" 
+                     alt="{{ memory.title }}"
+                     style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ memory.title }}</h5>
+                    {% if memory.description %}
+                    <p class="card-text">{{ memory.description }}</p>
+                    {% endif %}
+                    <small class="text-muted">Добавлено {{ memory.date_created.strftime('%d.%m.%Y') }}</small>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{{ url_for('uploaded_file', filename=memory.file_path) }}" 
+                       target="_blank" 
+                       class="btn btn-sm btn-outline-primary me-2">
+                        <i class="bi bi-eye"></i> Просмотр
+                    </a>
+                    <a href="#" class="btn btn-sm btn-outline-danger delete-btn">
+                        <i class="bi bi-trash"></i> Удалить
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        В вашей галерее пока нет воспоминаний. Добавьте первое фото или видео!
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

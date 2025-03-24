@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Приветствие -->
+    <div class="col-md-12 mb-4">
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                <h1 class="display-4">Добро пожаловать, {{ user.name }}!</h1>
+                <p class="lead">Сегодня {{ datetime.now().strftime('%d %B %Y') }}, и вы уже вместе {{ days_together }} дней!</p>
+                {% if partner %}
+                <p>Ваша половинка: <strong>{{ partner.name }}</strong></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Общие заметки -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="bi bi-journal-text"></i> Последние общие заметки</h5>
+            </div>
+            <div class="card-body">
+                {% if shared_notes %}
+                    <div class="list-group">
+                        {% for note in shared_notes[:3] %}
+                        <a href="{{ url_for('view_note', id=note.id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ note.title }}</h6>
+                                <small>{{ note.date_created.strftime('%d.%m.%Y') }}</small>
+                            </div>
+                            <p class="mb-1">{{ note.content[:50] }}...</p>
+                            <small>Автор: {{ note.author.name }}</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('shared_notes') }}" class="btn btn-outline-primary mt-3">Все общие заметки</a>
+                {% else %}
+                    <p>Пока нет общих заметок</p>
+                    <a href="{{ url_for('add_note') }}" class="btn btn-primary">Добавить заметку</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Желания -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-stars"></i> Ваши желания</h5>
+            </div>
+            <div class="card-body">
+                {% if wishes %}
+                    <div class="list-group">
+                        {% for wish in wishes[:3] %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <p class="mb-1">{{ wish.content }}</p>
+                                <div>
+                                    {% if wish.is_fulfilled %}
+                                        <span class="badge bg-success">Исполнено</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">В ожидании</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <small class="text-muted">Добавлено {{ wish.date_created.strftime('%d.%m.%Y') }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('list_wishes') }}" class="btn btn-outline-success mt-3">Все желания</a>
+                {% else %}
+                    <p>У вас пока нет желаний</p>
+                    <a href="{{ url_for('add_wish') }}" class="btn btn-success">Добавить желание</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Цели -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5><i class="bi bi-check-circle"></i> Ваши общие цели</h5>
+            </div>
+            <div class="card-body">
+                {% if goals %}
+                    <div class="list-group">
+                        {% for goal in goals[:3] %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ goal.title }}</h6>
+                                {% if goal.deadline %}
+                                    <small>До {{ goal.deadline.strftime('%d.%m.%Y') }}</small>
+                                {% endif %}
+                            </div>
+                            <p class="mb-1">{{ goal.description[:50] }}...</p>
+                            <div class="progress mt-2">
+                                <div class="progress-bar {% if goal.is_completed %}bg-success{% else %}bg-info{% endif %}" 
+                                     role="progressbar" style="width: {% if goal.is_completed %}100%{% else %}50%{% endif %}" 
+                                     aria-valuenow="{% if goal.is_completed %}100{% else %}50{% endif %}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    {% if goal.is_completed %}Выполнено!{% else %}В процессе{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('list_goals') }}" class="btn btn-outline-info mt-3">Все цели</a>
+                {% else %}
+                    <p>У вас пока нет общих целей</p>
+                    <a href="{{ url_for('add_goal') }}" class="btn btn-info">Добавить цель</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Ближайшие события -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5><i class="bi bi-calendar-event"></i> Ближайшие события</h5>
+            </div>
+            <div class="card-body">
+                {% if upcoming_events %}
+                    <div class="list-group">
+                        {% for event in upcoming_events %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ event.title }}</h6>
+                                <small>{{ event.date.strftime('%d.%m.%Y %H:%M') }}</small>
+                            </div>
+                            {% if event.description %}
+                                <p class="mb-1">{{ event.description[:50] }}{% if event.description|length > 50 %}...{% endif %}</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('view_calendar') }}" class="btn btn-outline-warning mt-3">Весь календарь</a>
+                {% else %}
+                    <p>Ближайших событий нет</p>
+                    <a href="{{ url_for('add_event') }}" class="btn btn-warning">Добавить событие</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Финансы -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5><i class="bi bi-cash-stack"></i> Финансы</h5>
+            </div>
+            <div class="card-body">
+                {% if finances %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Сумма</th>
+                                    <th>Описание</th>
+                                    <th>Тип</th>
+                                    <th>Дата</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for finance in finances %}
+                                <tr>
+                                    <td>{{ finance.amount }}</td>
+                                    <td>{{ finance.description[:20] }}{% if finance.description|length > 20 %}...{% endif %}</td>
+                                    <td>
+                                        {% if finance.is_income %}
+                                            <span class="badge bg-success">Доход</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Расход</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ finance.date.strftime('%d.%m.%Y') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{{ url_for('finance_dashboard') }}" class="btn btn-outline-danger mt-3">Подробнее</a>
+                {% else %}
+                    <p>Финансовых записей нет</p>
+                    <a href="{{ url_for('add_finance') }}" class="btn btn-danger">Добавить запись</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Галерея -->
+   <!-- Галерея -->
+<div class="col-md-6 mb-4">
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h5><i class="bi bi-images"></i> Последние воспоминания</h5>
+        </div>
+        <div class="card-body">
+            {% if memories %}
+            <div class="row">
+                {% for memory in memories %}
+                <div class="col-6 mb-3">
+                    <div class="memory-thumbnail">
+                        <img src="{{ url_for('uploaded_file', filename=memory.file_path) }}" 
+                             alt="{{ memory.title }}" 
+                             class="img-thumbnail w-100" 
+                             style="height: 120px; object-fit: cover;">
+                        <div class="memory-title">{{ memory.title }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('view_gallery') }}" class="btn btn-outline-secondary mt-3">Вся галерея</a>
+            {% else %}
+            <p>В вашей галерее пока нет воспоминаний</p>
+            <a href="{{ url_for('add_memory') }}" class="btn btn-secondary">Добавить воспоминание</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

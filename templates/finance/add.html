@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить финансовую запись{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4><i class="bi bi-cash-coin"></i> Добавить финансовую запись</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_finance') }}">
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Сумма</label>
+                            <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Описание</label>
+                            <input type="text" class="form-control" id="description" name="description" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Категория</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="Продукты">Продукты</option>
+                                <option value="Транспорт">Транспорт</option>
+                                <option value="Развлечения">Развлечения</option>
+                                <option value="Одежда">Одежда</option>
+                                <option value="Здоровье">Здоровье</option>
+                                <option value="Коммунальные">Коммунальные</option>
+                                <option value="Зарплата">Зарплата</option>
+                                <option value="Подарок">Подарок</option>
+                                <option value="Другое">Другое</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="is_income" name="is_income">
+                            <label class="form-check-label" for="is_income">Это доход</label>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-save"></i> Сохранить запись
+                            </button>
+                            <a href="{{ url_for('finance_dashboard') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

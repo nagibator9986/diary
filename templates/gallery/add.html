@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить воспоминание{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h4><i class="bi bi-image"></i> Добавить воспоминание</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_memory') }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Название</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Описание (необязательно)</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Файл (фото или видео)</label>
+                            <input type="file" class="form-control" id="file" name="file" required>
+                            <div class="form-text">Максимальный размер файла: 16MB</div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-secondary text-white">
+                                <i class="bi bi-upload"></i> Загрузить
+                            </button>
+                            <a href="{{ url_for('view_gallery') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

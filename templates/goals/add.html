@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить цель{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="bi bi-check-circle"></i> Добавить общую цель</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_goal') }}">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Название цели</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                            <div class="form-text">Кратко опишите вашу цель</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Описание</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                            <div class="form-text">Подробно опишите, чего вы хотите достичь</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deadline" class="form-label">Срок выполнения (необязательно)</label>
+                            <input type="date" class="form-control" id="deadline" name="deadline">
+                            <div class="form-text">Установите дедлайн для этой цели</div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-info text-white">
+                                <i class="bi bi-save"></i> Сохранить цель
+                            </button>
+                            <a href="{{ url_for('list_goals') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

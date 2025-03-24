@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Календарь событий{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-calendar-event"></i> Календарь событий</h2>
+        <a href="{{ url_for('add_event') }}" class="btn btn-warning">
+            <i class="bi bi-plus-circle"></i> Добавить событие
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Предстоящие события</h5>
+                </div>
+                <div class="card-body">
+                    {% if events %}
+                    <div class="list-group">
+                        {% for event in events %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="mb-1">{{ event.title }}</h5>
+                                    <p class="mb-1">{{ event.description }}</p>
+                                    <small class="text-muted">Добавлено: {{ event.date_created.strftime('%d.%m.%Y %H:%M') }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="mb-2">
+                                        <span class="badge bg-{% if event.date < datetime.now() %}secondary{% else %}warning text-dark{% endif %}">
+                                            {{ event.date.strftime('%d.%m.%Y %H:%M') }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <a href="{{ url_for('delete_event', id=event.id) }}" class="btn btn-sm btn-outline-danger delete-btn">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        У вас пока нет запланированных событий. Добавьте первое событие!
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Ближайшие события</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_events %}
+                    <div class="list-group">
+                        {% for event in upcoming_events[:5] %}
+                        <div class="list-group-item">
+                            <h6 class="mb-1">{{ event.title }}</h6>
+                            <small class="text-muted">{{ event.date.strftime('%d.%m.%Y %H:%M') }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        Ближайших событий нет
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
